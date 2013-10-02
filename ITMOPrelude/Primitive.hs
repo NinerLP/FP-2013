@@ -150,45 +150,70 @@ gcd a b = gcd b (natMod a b)
 -- Öåëûå ÷èñëà
 
 -- Òğåáóåòñÿ, ÷òîáû ïğåäñòàâëåíèå êàæäîãî ÷èñëà áûëî åäèíñòâåííûì
-data Int = UNDEFINED deriving (Show,Read)
+data Int = Pos Nat | Neg Nat deriving (Show,Read)
 
-intZero   = undefined   -- 0
-intOne    = undefined     -- 1
-intNegOne = undefined -- -1
+intZero   = Pos Zero   -- 0
+intOne    = Pos (Succ Zero)     -- 1
+intNegOne = Neg Zero -- -1
 
 -- n -> - n
 intNeg :: Int -> Int
-intNeg = undefined
+intNeg (Pos Zero) = (Pos Zero)
+--intNeg Pos x = Neg (x -. 1)
+intNeg (Pos (Succ x)) = (Neg x)
+intNeg (Neg x) = (Pos (Succ x))
 
 -- Äàëüøå òàêæå êàê äëÿ íàòóğàëüíûõ
 intCmp :: Int -> Int -> Tri
-intCmp = undefined
+intCmp (Pos a) (Pos b) = natCmp a b
+intCmp (Pos _) (Neg _) = GT
+intCmp (Neg _) (Pos _) = LT
+intCmp (Neg a) (Neg b) = natCmp b a
 
 intEq :: Int -> Int -> Bool
-intEq = undefined
+intEq (Pos a) (Pos b) = natEq a b
+intEq (Neg _) (Pos _) = False
+intEq (Pos _) (Neg _) = False
+intEq (Neg a) (Neg b) = natEq a b
 
 intLt :: Int -> Int -> Bool
-intLt = undefined
+intLt (Pos a) (Pos b) = natLt a b
+intLt (Pos _) (Neg _) = False
+intLT (Neg _) (Pos _) = True
+intLT (Neg a) (Neg b) = natLt b a
 
 infixl 6 .+., .-.
 -- Ó ìåíÿ ıòî åäèíñòâåííûé ñòğàøíûé òåğì âî âñ¸ì ôàéëå
 (.+.) :: Int -> Int -> Int
-n .+. m = undefined
+--n .+. m = undefined
+(Pos a) .+. (Pos b) = Pos (a +. b)
+(Neg a) .+. (Neg b) = Neg (a +. b +.  natOne)
+(Pos a) .+. (Neg b) = case natLt a (b +. natOne) of
+	True -> Neg (b -. a)
+	False -> Pos (a -. b -. natOne)
+--(Neg a) .+. (Pos b) = (Pos b) .+. (Neg a)
+a .+. b = b .+. a
 
 (.-.) :: Int -> Int -> Int
 n .-. m = n .+. (intNeg m)
 
 infixl 7 .*.
 (.*.) :: Int -> Int -> Int
-n .*. m = undefined
-
+--n .*. m = undefined
+(Pos a) .*. (Pos b) = Pos (a *. b)
+(Neg a) .*. (Neg b) = Pos ((a +. natOne) *. (b +. natOne))
+(Pos a) .*. (Neg b) = Neg (a *. (b +. natOne))
+a .*. b = b .*. a
 -------------------------------------------
 -- Ğàöèîíàëüíûå ÷èñëà
 
-data Rat = Rat Int Nat
+data Rat = Rat Int Nat deriving (Show, Read)
 
 ratNeg :: Rat -> Rat
 ratNeg (Rat x y) = Rat (intNeg x) y
+
+ratZero = Rat intZero natOne
+ratOne = Rat intOne natOne
 
 -- Ó ğàöèîíàëüíûõ åù¸ åñòü îáğàòíûå ıëåìåíòû
 ratInv :: Rat -> Rat
