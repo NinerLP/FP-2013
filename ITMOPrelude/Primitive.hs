@@ -4,16 +4,16 @@ module ITMOPrelude.Primitive where
 import Prelude (Show,Read)
 
 ---------------------------------------------
--- Синтаксис лямбда-выражений
+-- РЎРёРЅС‚Р°РєСЃРёСЃ Р»СЏРјР±РґР°-РІС‹СЂР°Р¶РµРЅРёР№
 
--- Эквивалентные определения
+-- Р­РєРІРёРІР°Р»РµРЅС‚РЅС‹Рµ РѕРїСЂРµРґРµР»РµРЅРёСЏ
 example1 x  = x
 example1'   = \x -> x
 example1''  = let y = \x -> x in y
 example1''' = y where
     y = \x -> x
 
--- Снова эквивалентные определения
+-- РЎРЅРѕРІР° СЌРєРІРёРІР°Р»РµРЅС‚РЅС‹Рµ РѕРїСЂРµРґРµР»РµРЅРёСЏ
 example2 x y  = x %+ y
 example2' x   = \y -> x %+ y
 example2''    = \x -> \y -> x %+ y
@@ -22,65 +22,65 @@ example2''''  = let z = \x y -> x %+ y in z
 example2''''' = z where
     z x = \y -> x %+ y
 
--- Зацикленное выражение
+-- Р—Р°С†РёРєР»РµРЅРЅРѕРµ РІС‹СЂР°Р¶РµРЅРёРµ
 undefined = undefined
 
--- Ниже следует реализовать все термы, состоящие из undefined заглушки.
--- Любые термы можно переписывать (natEq и natLt --- хорошие кандидаты).
+-- РќРёР¶Рµ СЃР»РµРґСѓРµС‚ СЂРµР°Р»РёР·РѕРІР°С‚СЊ РІСЃРµ С‚РµСЂРјС‹, СЃРѕСЃС‚РѕСЏС‰РёРµ РёР· undefined Р·Р°РіР»СѓС€РєРё.
+-- Р›СЋР±С‹Рµ С‚РµСЂРјС‹ РјРѕР¶РЅРѕ РїРµСЂРµРїРёСЃС‹РІР°С‚СЊ (natEq Рё natLt --- С…РѕСЂРѕС€РёРµ РєР°РЅРґРёРґР°С‚С‹).
 
 -------------------------------------------
--- Примитивные типы
+-- РџСЂРёРјРёС‚РёРІРЅС‹Рµ С‚РёРїС‹
 
 data Hole = Hole
 hole = hole
 
--- Тип с единственным элементом
+-- РўРёРї СЃ РµРґРёРЅСЃС‚РІРµРЅРЅС‹Рј СЌР»РµРјРµРЅС‚РѕРј
 data Unit = Unit deriving (Show,Read)
 
--- Пара, произведение
+-- РџР°СЂР°, РїСЂРѕРёР·РІРµРґРµРЅРёРµ
 data Pair a b = Pair { fst :: a, snd :: b } deriving (Show,Read)
 
--- Вариант, копроизведение
+-- Р’Р°СЂРёР°РЅС‚, РєРѕРїСЂРѕРёР·РІРµРґРµРЅРёРµ
 data Either a b = Left a | Right b deriving (Show,Read)
 
--- Частый частный случай, изоморфно Either Unit a
+-- Р§Р°СЃС‚С‹Р№ С‡Р°СЃС‚РЅС‹Р№ СЃР»СѓС‡Р°Р№, РёР·РѕРјРѕСЂС„РЅРѕ Either Unit a
 data Maybe a = Nothing | Just a deriving (Show,Read)
 
--- Частый частный случай, изоморфно Either Unit Unit
+-- Р§Р°СЃС‚С‹Р№ С‡Р°СЃС‚РЅС‹Р№ СЃР»СѓС‡Р°Р№, РёР·РѕРјРѕСЂС„РЅРѕ Either Unit Unit
 data Bool = False | True deriving (Show,Read)
 
--- Следует отметить, что встроенный if с этим Bool использовать нельзя,
--- зато case всегда работает.
+-- РЎР»РµРґСѓРµС‚ РѕС‚РјРµС‚РёС‚СЊ, С‡С‚Рѕ РІСЃС‚СЂРѕРµРЅРЅС‹Р№ if СЃ СЌС‚РёРј Bool РёСЃРїРѕР»СЊР·РѕРІР°С‚СЊ РЅРµР»СЊР·СЏ,
+-- Р·Р°С‚Рѕ case РІСЃРµРіРґР° СЂР°Р±РѕС‚Р°РµС‚.
 
--- Ну или можно реализовать свой if
+-- РќСѓ РёР»Рё РјРѕР¶РЅРѕ СЂРµР°Р»РёР·РѕРІР°С‚СЊ СЃРІРѕР№ if
 if' True a b = a
 if' False a b = b
 
--- Трихотомия. Замечательный тип, показывающий результат сравнения
+-- РўСЂРёС…РѕС‚РѕРјРёСЏ. Р—Р°РјРµС‡Р°С‚РµР»СЊРЅС‹Р№ С‚РёРї, РїРѕРєР°Р·С‹РІР°СЋС‰РёР№ СЂРµР·СѓР»СЊС‚Р°С‚ СЃСЂР°РІРЅРµРЅРёСЏ
 data Tri = LT | EQ | GT deriving (Show,Read)
 
 -------------------------------------------
--- Булевы значения
+-- Р‘СѓР»РµРІС‹ Р·РЅР°С‡РµРЅРёСЏ
 
--- Логическое "НЕ"
+-- Р›РѕРіРёС‡РµСЃРєРѕРµ "РќР•"
 not :: Bool -> Bool
 not True = False
 not False = True
 
 infixr 3 &&
--- Логическое "И"
+-- Р›РѕРіРёС‡РµСЃРєРѕРµ "Р"
 (&&) :: Bool -> Bool -> Bool
 True  && x = x
 False && _ = False
 
 infixr 2 ||
--- Логическое "ИЛИ"
+-- Р›РѕРіРёС‡РµСЃРєРѕРµ "РР›Р"
 (||) :: Bool -> Bool -> Bool
 True  || _ = True
 False || x = x
 
 -------------------------------------------
--- Натуральные числа
+-- РќР°С‚СѓСЂР°Р»СЊРЅС‹Рµ С‡РёСЃР»Р°
 
 data Nat = Zero | Succ Nat deriving (Show,Read)
 
@@ -89,21 +89,21 @@ natOne = Succ Zero -- 1
 nat14 = (Succ (Succ (Succ (Succ (Succ (Succ (Succ (Succ (Succ (Succ (Succ (Succ (Succ (Succ Zero))))))))))))))
 nat7 = (Succ (Succ (Succ (Succ (Succ (Succ (Succ Zero)))))))
 
--- Сравнивает два натуральных числа
+-- РЎСЂР°РІРЅРёРІР°РµС‚ РґРІР° РЅР°С‚СѓСЂР°Р»СЊРЅС‹С… С‡РёСЃР»Р°
 natCmp :: Nat -> Nat -> Tri
 natCmp Zero Zero = EQ
 natCmp Zero (Succ _) = LT
 natCmp (Succ _) Zero = GT
 natCmp (Succ n) (Succ m) = natCmp n m
 
--- n совпадает с m 
+-- n СЃРѕРІРїР°РґР°РµС‚ СЃ m 
 natEq :: Nat -> Nat -> Bool
 natEq Zero     Zero     = True
 natEq Zero     (Succ _) = False
 natEq (Succ _) Zero     = False
 natEq (Succ n) (Succ m) = natEq n m
 
--- n меньше m
+-- n РјРµРЅСЊС€Рµ m
 natLt :: Nat -> Nat -> Bool
 natLt Zero     Zero     = False
 natLt Zero     (Succ m) = True
@@ -111,13 +111,13 @@ natLt (Succ n) Zero     = False
 natLt (Succ n) (Succ m) = natLt n m
 
 infixl 6 +.
--- Сложение для натуральных чисел
+-- РЎР»РѕР¶РµРЅРёРµ РґР»СЏ РЅР°С‚СѓСЂР°Р»СЊРЅС‹С… С‡РёСЃРµР»
 (+.) :: Nat -> Nat -> Nat
 Zero     +. m = m
 (Succ n) +. m = Succ (n +. m)
 
 infixl 6 -.
--- Вычитание для натуральных чисел
+-- Р’С‹С‡РёС‚Р°РЅРёРµ РґР»СЏ РЅР°С‚СѓСЂР°Р»СЊРЅС‹С… С‡РёСЃРµР»
 (-.) :: Nat -> Nat -> Nat
 (Succ n) -. (Succ m) = n -. m
 n -. Zero = n
@@ -125,12 +125,12 @@ Zero -. m = Zero
  
 
 infixl 7 *.
--- Умножение для натуральных чисел
+-- РЈРјРЅРѕР¶РµРЅРёРµ РґР»СЏ РЅР°С‚СѓСЂР°Р»СЊРЅС‹С… С‡РёСЃРµР»
 (*.) :: Nat -> Nat -> Nat
 Zero     *. m = Zero
 (Succ n) *. m = m +. (n *. m)
 
--- Целое и остаток от деления n на m
+-- Р¦РµР»РѕРµ Рё РѕСЃС‚Р°С‚РѕРє РѕС‚ РґРµР»РµРЅРёСЏ n РЅР° m
 natDivMod :: Nat -> Nat -> Pair Nat Nat
 natDivMod Zero _ = Pair Zero Zero
 natDivMod _ Zero = Pair Zero Zero
@@ -138,18 +138,18 @@ natDivMod n m = case natCmp n m of LT -> Pair Zero n
                                    EQ -> Pair (Succ Zero) Zero
                                    GT -> Pair (Succ (natDiv (n -. m) m)) (natMod (n -. m) m)
 
-natDiv n = fst . natDivMod n -- Целое
-natMod n = snd . natDivMod n -- Остаток
+natDiv n = fst . natDivMod n -- Р¦РµР»РѕРµ
+natMod n = snd . natDivMod n -- РћСЃС‚Р°С‚РѕРє
 
--- Поиск GCD алгоритмом Евклида (должен занимать 2 (вычислителельная часть) + 1 (тип) строчки)
+-- РџРѕРёСЃРє GCD Р°Р»РіРѕСЂРёС‚РјРѕРј Р•РІРєР»РёРґР° (РґРѕР»Р¶РµРЅ Р·Р°РЅРёРјР°С‚СЊ 2 (РІС‹С‡РёСЃР»РёС‚РµР»РµР»СЊРЅР°СЏ С‡Р°СЃС‚СЊ) + 1 (С‚РёРї) СЃС‚СЂРѕС‡РєРё)
 gcd :: Nat -> Nat -> Nat
 gcd a Zero = a
 gcd a b = gcd b (natMod a b)
 
 -------------------------------------------
--- Целые числа
+-- Р¦РµР»С‹Рµ С‡РёСЃР»Р°
 
--- Требуется, чтобы представление каждого числа было единственным
+-- РўСЂРµР±СѓРµС‚СЃСЏ, С‡С‚РѕР±С‹ РїСЂРµРґСЃС‚Р°РІР»РµРЅРёРµ РєР°Р¶РґРѕРіРѕ С‡РёСЃР»Р° Р±С‹Р»Рѕ РµРґРёРЅСЃС‚РІРµРЅРЅС‹Рј
 data Int = Pos Nat | Neg Nat deriving (Show,Read)
 
 intZero   = Pos Zero   -- 0
@@ -163,7 +163,7 @@ intNeg (Pos Zero) = (Pos Zero)
 intNeg (Pos (Succ x)) = (Neg x)
 intNeg (Neg x) = (Pos (Succ x))
 
--- Дальше также как для натуральных
+-- Р”Р°Р»СЊС€Рµ С‚Р°РєР¶Рµ РєР°Рє РґР»СЏ РЅР°С‚СѓСЂР°Р»СЊРЅС‹С…
 intCmp :: Int -> Int -> Tri
 intCmp (Pos a) (Pos b) = natCmp a b
 intCmp (Pos _) (Neg _) = GT
@@ -183,7 +183,7 @@ intLT (Neg _) (Pos _) = True
 intLT (Neg a) (Neg b) = natLt b a
 
 infixl 6 .+., .-.
--- У меня это единственный страшный терм во всём файле
+-- РЈ РјРµРЅСЏ СЌС‚Рѕ РµРґРёРЅСЃС‚РІРµРЅРЅС‹Р№ СЃС‚СЂР°С€РЅС‹Р№ С‚РµСЂРј РІРѕ РІСЃС‘Рј С„Р°Р№Р»Рµ
 (.+.) :: Int -> Int -> Int
 --n .+. m = undefined
 (Pos a) .+. (Pos b) = Pos (a +. b)
@@ -205,26 +205,34 @@ infixl 7 .*.
 (Pos a) .*. (Neg b) = Neg (a *. (b +. natOne))
 a .*. b = b .*. a
 -------------------------------------------
--- Рациональные числа
+-- Р Р°С†РёРѕРЅР°Р»СЊРЅС‹Рµ С‡РёСЃР»Р°
 
 data Rat = Rat Int Nat deriving (Show, Read)
 
 ratNeg :: Rat -> Rat
 ratNeg (Rat x y) = Rat (intNeg x) y
 
+ratSimplify :: Rat -> Rat
+ratSimplify (Rat (Pos x) y) = (Rat (Pos (natDiv x (gcd x y))) (natDiv y (gcd x y)))
+ratSimplify a = ratNeg $ ratSimplify $ ratNeg a
+
 ratZero = Rat intZero natOne
 ratOne = Rat intOne natOne
 
--- У рациональных ещё есть обратные элементы
+-- РЈ СЂР°С†РёРѕРЅР°Р»СЊРЅС‹С… РµС‰С‘ РµСЃС‚СЊ РѕР±СЂР°С‚РЅС‹Рµ СЌР»РµРјРµРЅС‚С‹
 ratInv :: Rat -> Rat
-ratInv = undefined
+ratInv (Rat (Pos a) b) = (Rat (Pos b) a)
+ratInv (Rat (Neg a) b) = (Rat (intNeg (Pos b)) (a +. natOne))
 
--- Дальше как обычно
+-- Р”Р°Р»СЊС€Рµ РєР°Рє РѕР±С‹С‡РЅРѕ
 ratCmp :: Rat -> Rat -> Tri
 ratCmp = undefined
 
 ratEq :: Rat -> Rat -> Bool
-ratEq = undefined
+ratEq a b = ratEqS (ratSimplify a) (ratSimplify b)
+
+ratEqS :: Rat -> Rat -> Bool
+ratEqS (Rat a b) (Rat c d) = intEq a c && natEq b d 
 
 ratLt :: Rat -> Rat -> Bool
 ratLt = undefined
@@ -244,8 +252,8 @@ n %* m = undefined
 n %/ m = n %* (ratInv m)
 
 -------------------------------------------
--- Операции над функциями.
--- Определены здесь, но использовать можно и выше
+-- РћРїРµСЂР°С†РёРё РЅР°Рґ С„СѓРЅРєС†РёСЏРјРё.
+-- РћРїСЂРµРґРµР»РµРЅС‹ Р·РґРµСЃСЊ, РЅРѕ РёСЃРїРѕР»СЊР·РѕРІР°С‚СЊ РјРѕР¶РЅРѕ Рё РІС‹С€Рµ
 
 infixr 9 .
 f . g = \ x -> f (g x)
@@ -253,11 +261,11 @@ f . g = \ x -> f (g x)
 infixr 0 $
 f $ x = f x
 
--- Эквивалентные определения
+-- Р­РєРІРёРІР°Р»РµРЅС‚РЅС‹Рµ РѕРїСЂРµРґРµР»РµРЅРёСЏ
 example3   a b c = gcd a (gcd b c)
 example3'  a b c = gcd a $ gcd b c
 example3'' a b c = ($) (gcd a) (gcd b c)
 
--- И ещё эквивалентные определения
+-- Р РµС‰С‘ СЌРєРІРёРІР°Р»РµРЅС‚РЅС‹Рµ РѕРїСЂРµРґРµР»РµРЅРёСЏ
 example4  a b x = (gcd a (gcd b x))
 example4' a b = gcd a . gcd b
